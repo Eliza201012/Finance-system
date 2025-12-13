@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from .forms import SignUpForm, UpdateUserForm, UpdateProfileForm
 from django.contrib.auth.forms import AuthenticationForm
+from .models import Profile
 
 def signup(request):
     if request.method == "POST":
@@ -20,9 +21,12 @@ def signup(request):
 
 @login_required
 def profile(request):
+    # Витягуємо профіль и юзера
+    profile_object, _ = Profile.objects.get_or_create(user=request.user)
+
     if request.method == "POST":
         user_form = UpdateUserForm(request.POST, instance=request.user)
-        profile_form = UpdateProfileForm(request.POST, instance=request.user.profile)
+        profile_form = UpdateProfileForm(request.POST, instance=profile_object)
 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
@@ -31,7 +35,7 @@ def profile(request):
             return redirect("accounts:profile")
     else:
         user_form = UpdateUserForm(instance=request.user)
-        profile_form = UpdateProfileForm(instance=request.user.profile)
+        profile_form = UpdateProfileForm(instance=profile_object)
 
     return render(request, "accounts/profile.html", {"user_form" : user_form, "profile_form" : profile_form})
 
