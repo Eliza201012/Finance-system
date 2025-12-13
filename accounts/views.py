@@ -47,4 +47,11 @@ def custom_login(request):
             login(request, user)
             messages.success(request, "You successfully login :)")
             return redirect("accounts:profile")
-    return render(request, "accounts/custom_login.html", {"form" : form})
+    else:
+        form = AuthenticationForm(request)
+    return render(request, "accounts/login.html", {"form" : form})
+
+@login_required
+def logout_profile(request):
+    logout(request)
+    return redirect("accounts:custom_login")
