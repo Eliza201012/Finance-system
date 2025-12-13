@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4 mb-4">
+            <h3 class="mb-3">Профіль користувача</h3>
+            <p><strong>Логін:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Баланс:</strong> {{ profile.balance }} {{ profile.currency }}</p>
+        </div>
+
+        <div class="card p-4">
+            <h4 class="mb-3">Редагування профілю</h4>
+            <form method="post">
+                {% csrf_token %}
+                {{ user_form.as_p }}
+                {{ profile_form.as_p }}
+                <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
