@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django_icon_picker.field import IconField
 
 class Category(models.Model):
@@ -15,10 +16,11 @@ class Category(models.Model):
     
 
 class Expense(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
     name = models.CharField(verbose_name="Name", max_length=100)
     amount = models.DecimalField(verbose_name="Amount", max_digits=12, decimal_places=2, default=0.00)
     date_time = models.DateTimeField(verbose_name="Date and time", auto_now_add=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Category")
     payment = models.CharField(verbose_name="Payment", max_length=50)
 
     class Meta:
