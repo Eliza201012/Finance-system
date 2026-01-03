@@ -56,8 +56,12 @@ def create_expense(request):
     if request.method == "POST":
         form = ExpenseForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success("Витрата успішно створена!:)")
+            # Щоб користувач зміг щось додати або змінити перед збереженням
+            expense = form.save(commit=False)
+            # Ця витрата належить поточному залогіненому користувачу
+            expense.user = request.user
+            expense.save()
+            messages.success(request, "Витрата успішно створена!:)")
             return redirect("expense_list")
     else:
         form = ExpenseForm()
@@ -65,22 +69,23 @@ def create_expense(request):
 
 @login_required
 def expense_list(request):
-    expenses = Expense.objects.all()
+    # Фільтруємо і виводимо витрати поточного користувача
+    expenses = Expense.objects.filter(user=request.user)
     return render(request, "expenses/expense_list.html", {"expenses" : expenses})
 
 @login_required
 def expense_detail(request, id):
-    expense = get_object_or_404(Expense, id=id)
+    expense = get_object_or_404(Expense, id=id, user=request.user)
     return render(request, "expenses/expense_detail.html", {"expense" : expense})
 
 @login_required
 def update_expense(request, id):
-    expense = get_object_or_404(Expense, id=id)
+    expense = get_object_or_404(Expense, id=id, user=request.user)
     if request.method == "POST":
         form = ExpenseForm(request.POST, instance=expense)
         if form.is_valid():
             form.save()
-            messages.success("Витрата успішно оновлена!")
+            messages.success(request, "Витрата успішно оновлена!")
             return redirect("expense_list")
     else:
         form = ExpenseForm(instance=expense)
