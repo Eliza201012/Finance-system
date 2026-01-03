@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Витрата{% endblock %}
+{% block content %}
+    <div class="card p-4">
+        <h3>{{ expense.name }}</h3>
+        <p><strong>Сума:</strong> {{ expense.amount }}</p>
+        <p><strong>Категорія:</strong> {{ expense.category }}</p>
+        <p><strong>Спосіб оплати:</strong> {{ expense.payment }}</p>
+        <p><strong>Дата:</strong> {{ expense.date_time|date:"d.m.Y H:i" }}</p>
+        <div class="mt-3">
+            <a href="{% url 'update_expense' expense.id %}" class="btn btn-primary">Редагувати</a>
+            <a href="{% url 'delete_expense' expense.id %}" class="btn btn-danger">Видалити</a>
+        </div>
+    </div>
+{% endblock %}

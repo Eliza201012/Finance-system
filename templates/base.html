@@ -7,6 +7,8 @@
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -29,12 +31,16 @@
             opacity: 0.9;
         }
         .navbar {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.08);
             backdrop-filter: blur(10px);
         }
-        .navbar-brand, .nav-link {
+        .navbar-brand,
+        .nav-link {
             color: #fff !important;
             font-weight: 500;
+        }
+        .nav-link:hover {
+            text-decoration: underline;
         }
         footer {
             color: #ccc;
@@ -46,16 +52,21 @@
 
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="#">💰 Finance Manager</a>
-        <div class="ms-auto">
-            {% if user.is_authenticated %}
-                <a href="{% url 'accounts:profile' %}" class="nav-link d-inline">Профіль</a>
-                <a href="{% url 'accounts:logout' %}" class="nav-link d-inline">Вийти</a>
-            {% else %}
-                <a href="{% url 'accounts:custom_login' %}" class="nav-link d-inline">Увійти</a>
-                <a href="{% url 'accounts:signup' %}" class="nav-link d-inline">Реєстрація</a>
-            {% endif %}
+        <a class="navbar-brand" href="{% url 'expense_list' %}">💰 Finance Manager</a>
+
+        {% if user.is_authenticated %}
+        <div class="d-flex gap-3">
+            <a href="{% url 'category_list' %}" class="nav-link d-inline">Категорії</a>
+            <a href="{% url 'expense_list' %}" class="nav-link d-inline">Витрати</a>
+            <a href="{% url 'accounts:profile' %}" class="nav-link d-inline">Профіль</a>
+            <a href="{% url 'accounts:logout' %}" class="nav-link d-inline">Вийти</a>
         </div>
+        {% else %}
+        <div class="d-flex gap-3">
+            <a href="{% url 'accounts:custom_login' %}" class="nav-link d-inline">Увійти</a>
+            <a href="{% url 'accounts:signup' %}" class="nav-link d-inline">Реєстрація</a>
+        </div>
+        {% endif %}
     </div>
 </nav>
 

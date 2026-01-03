@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Видалення{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4 text-center">
+            <h4>Видалити категорію "{{ category.name }}"?</h4>
+            <form method="post" class="mt-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Так, видалити</button>
+                <a href="{% url 'category_list' %}" class="btn btn-secondary">Скасувати</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

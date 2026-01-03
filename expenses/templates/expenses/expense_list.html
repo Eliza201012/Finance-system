@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Витрати{% endblock %}
+{% block content %}
+    <div class="card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Витрати</h3>
+            <a href="{% url 'create_expense' %}" class="btn btn-primary">+ Додати</a>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Назва</th>
+                    <th>Сума</th>
+                    <th>Категорія</th>
+                    <th>Дата</th>
+                    <th></th>
+                </tr>
+            </thead>
+        <tbody>
+            {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.name }}</td>
+                    <td>{{ expense.amount }}</td>
+                    <td>{{ expense.category.name }}</td>
+                    <td>{{ expense.date_time|date:"d.m.Y H:i" }}</td>
+                    <td>
+                        <a href="{% url 'expense_detail' expense.id %}" class="btn btn-sm btn-outline-secondary">Перегляд</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5">Витрат поки немає</td></tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+{% endblock %}
