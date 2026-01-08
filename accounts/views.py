@@ -6,6 +6,8 @@ from django.shortcuts import redirect, render
 from .forms import SignUpForm, UpdateUserForm, UpdateProfileForm
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Profile
+from expenses.models import Expense
+from decimal import Decimal
 
 def signup(request):
     if request.method == "POST":
@@ -55,3 +57,22 @@ def custom_login(request):
 def logout_profile(request):
     logout(request)
     return redirect("accounts:custom_login")
+
+@login_required
+# Поповнення балансу
+def add_money_to_balance(request):
+    profile = Profile.objects.get(user=request.user)
+
+    if request.method == "POST":
+        amount = Decimal(request.POST.get("amount"))
+        if amount < 0:
+            messages.error(request, "Are you idiot? You entered below zero!")
+        else:
+            profile.balance += amount
+            profile.save()
+            return redirect("accounts:profile")
+    return render(request, "accounts/recharge_confirm.html", {"currency" : profile.currency})
+'''
+Передаємо currency, щоб при поповненні балансу,
+користувач бачив у якій валюті він вводить суму
+'''
