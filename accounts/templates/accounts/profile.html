@@ -7,8 +7,13 @@
             <h3 class="mb-3">Профіль користувача</h3>
             <p><strong>Логін:</strong> {{ user.username }}</p>
             <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Баланс:</strong> {{ profile.balance }} {{ profile.currency }}</p>
+            <p><strong>Баланс:</strong> {{ request.user.profile.balance }} {{ profile.currency }}</p>
         </div>
+
+        <a href="{% url 'accounts:add_money_to_balance' %}" class="btn btn-success">
+            ➕ Поповнити баланс
+        </a>
+
 
         <div class="card p-4">
             <h4 class="mb-3">Редагування профілю</h4>
