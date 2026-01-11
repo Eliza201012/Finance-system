@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Category, Expense
 from .forms import CategoryForm, ExpenseForm
+from accounts.models import Profile
 
 # CRUD (Category)
 @login_required
@@ -56,13 +57,24 @@ def create_expense(request):
     if request.method == "POST":
         form = ExpenseForm(request.POST)
         if form.is_valid():
-            # Щоб користувач зміг щось додати або змінити перед збереженням
-            expense = form.save(commit=False)
-            # Ця витрата належить поточному залогіненому користувачу
-            expense.user = request.user
-            expense.save()
-            messages.success(request, "Витрата успішно створена!:)")
-            return redirect("expense_list")
+            # Після валідації джанго кладе результат у словник form.cleaned_data
+            amount = form.cleaned_data["amount"]
+            profile = Profile.objects.get(user=request.user)
+
+            if profile.balance < amount:
+                messages.error(request, "Dude, you're broke")
+            else:
+                # Щоб користувач зміг щось додати або змінити перед збереженням
+                expense = form.save(commit=False)
+                # Ця витрата належить поточному залогіненому користувачу
+                expense.user = request.user
+
+                profile.balance -= amount
+                profile.save()
+
+                expense.save()
+                messages.success(request, "Витрата успішно створена!:)")
+                return redirect("expense_list")
     else:
         form = ExpenseForm()
     return render(request, "expenses/expense_form.html", {"form" : form})
