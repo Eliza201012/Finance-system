@@ -56,6 +56,7 @@
 
         {% if user.is_authenticated %}
         <div class="d-flex gap-3">
+            <a href="{% url 'accounts:add_money_to_balance' %}" class="nav-link d-inline">Баланс: {{ request.user.profile.balance }} {{ profile.currency }}</a>
             <a href="{% url 'category_list' %}" class="nav-link d-inline">Категорії</a>
             <a href="{% url 'expense_list' %}" class="nav-link d-inline">Витрати</a>
             <a href="{% url 'accounts:profile' %}" class="nav-link d-inline">Профіль</a>
@@ -69,6 +70,19 @@
         {% endif %}
     </div>
 </nav>
+
+<!-- GLOBAL MESSAGES -->
+<div class="container mt-3">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
 
 <div class="container py-5">
     {% block content %}{% endblock %}
