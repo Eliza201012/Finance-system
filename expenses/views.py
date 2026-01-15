@@ -106,8 +106,16 @@ def update_expense(request, id):
 @login_required
 def delete_expense(request, id):
     expense = get_object_or_404(Expense, id=id)
+    profile = Profile.objects.get(user=request.user)
+
     if request.method == "POST":
+        # Повертаємо гроші
+        profile.balance += expense.amount
+        profile.save()
+
         expense.delete()
-        messages.success(request, "Витрата успішно видалена!")
+
+        messages.success(request, "Витрата успішно видалена, гроші повернені на баланс!")
         return redirect("expense_list")
+    
     return render(request, "expenses/expense_confirm_delete.html", {"expense" : expense})
